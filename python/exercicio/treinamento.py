@@ -1,8 +1,13 @@
+# import
+import os
+
+
 # Variáveis
 saldo = 0
 limite = 500
 extrato = ""
-valor_depositado = 0
+valor = 0
+# valor_depositado = 0
 numero_saque = 0
 LIMITE_SAQUE = 3
 
@@ -23,31 +28,46 @@ Menu
                               v.02          
 =======================================   
 """)
-    input("Digite uma opção: \n==> ")
 
-  
-# while True:
-#     opcao = menu()
+# Telas     
+def tela_deposito():
+    print("\n ============= DEPÓSITO ==============\n")
 
-#     if opcao == "d":
-#         valor_depositado = float(input("Informe o valor do depósito:"))
-#         saldo, extrato = depositar(saldo, valor_depositado, extrato)
-    
-#     elif opcao == "q":
-#         break
-#     else:
-#         print("")
+def tela_saque():
+    print("\n ============ SAQUE ================\n")
 
+# def tela_extrato():
+#     print("\n ============ DEPOSITO ================\n")
+
+
+
+   
+
+          
+ 
 
 # Funções:
+
+# limpar tela
+def limpar_tela():
+    os.system('clear')
+
 # depositar
 def depositar(saldo, valor, extrato, /):
     
-    valor = float(input("informe o valor do depósito: "))
+    valor = float(input("informe o valor do depósito:\nR$ "))
+    
     # verifica se foi digitado valores negativos
-    if  valor > 0:
+    if valor > 0:
         saldo += valor
         extrato += f"Depósito: R$ {valor:.2f}\n"
+        input("\nAperte Enter para continuar...")
+        limpar_tela()
+        tela_deposito()
+        print("""
+Deposito realizado com sucesso!
+        """)
+        
     else:
         print("Operação falhou! O valor informado é inválido.")
         
@@ -76,7 +96,7 @@ def sacar():
         extrato+= f"Saque: R$ {valor:.2f}\n"
         numero_saque += 1
 
-    return valor
+    return saldo, extrato
                                 
 # extrato
 def exibir_extrato():
@@ -96,10 +116,50 @@ tenha um excepcional dia.
     """)
 
 # Chamar os métodos
-menu()
-saldo, extrato = depositar(saldo, valor_depositado, extrato)
-sacar()
-exibir_extrato()
-mensagem_final()
+# menu()
 
+# saldo, extrato = depositar(saldo, valor, extrato)
+# sacar()
+# exibir_extrato()
+# mensagem_final()
 
+while True:
+    # codição de parada do laço while que verifica a opção escolhida
+    # teste = (input("Uma opção: "))
+    menu() # Iniciação do programa
+    opcao = input("Digite uma opção: \n==> ")
+    limpar_tela()
+    if opcao == "d":
+        tela_deposito()
+        saldo, extrato = depositar(saldo, valor, extrato)
+        
+        voltar = input("""
+=====================================
+                       
+Deseja realizar outra operação? [s/n]\n==> """)
+        if voltar == "s":
+            limpar_tela()
+        elif voltar == "n":
+            opcao = "q"
+            limpar_tela()
+            mensagem_final()
+            break
+            
+    elif opcao == "s":
+        tela_saque()
+        sacar()
+        limpar_tela()
+        
+    elif  opcao == "e":
+        exibir_extrato()
+        
+
+ # comando para encerrar a aplicação 
+    elif opcao == "q":
+        mensagem_final()
+        break
+    else:
+        continue
+        
+       
+    
