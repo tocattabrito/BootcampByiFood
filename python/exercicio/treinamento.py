@@ -1,5 +1,6 @@
 # import
 import os
+import textwrap
 
 # constantes
 LIMITE_SAQUE = 3
@@ -62,15 +63,16 @@ def criar_conta(agencia, numero_conta, usuarios):
     print("Usuário não encontrado, fluxo de criação de conta encerrado!")
 
 # listar contas
-def listar_contas(contas):
+def listar_contas(conta):
     for conta in contas:
         linha = f"""\
             Agência:{conta['agencia']}
             C/C:{conta['numero_conta']}
             Titular:{conta['usuario']['nome']}
         """
-        print("=" * 100)
-    #   print(textwrap.dedent(linha))
+        # print(contas)
+        print("=" * 25)
+        print(textwrap.dedent(linha))
 
 
 # Pesquisar usuário
@@ -195,7 +197,7 @@ Deseja realizar outra operação? [s/n]\n==> """)
         conta = criar_conta(AGENCIA, numero_conta, usuarios)
 
         if conta:
-            contas.append(contas)
+            contas.append(conta)
 
     # chama o método que cria um novo usuário
     elif opcao == "nu":
