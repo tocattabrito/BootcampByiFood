@@ -38,9 +38,11 @@ Menu
 def criar_usuario(usuarios):
     cpf = input("Informe o CPF (somente número): ")
     usuario = filtrar_usuario(cpf, usuarios)
-
+    
     if usuario:
-        print("Já existe usuário com esse CPF!")
+        print("""
+Já existe usuário com esse CPF!
+        """)
         return
 
     nome = input("Informe o nome completo: ")
@@ -48,8 +50,12 @@ def criar_usuario(usuarios):
     endereco = input("informe o endereço (logradouro, nro - bairro - cidade/sigla estado): ")
 
     usuarios.append({"nome": nome, "data_nascimento": data_nascimento, "cpf": cpf, "endereco": endereco})
-
-    print("=== Usuário criado com sucesso! ===")
+    input("\nAperte Enter para continuar...")
+    limpar_tela()
+    tela_novo_usuario()
+    print("""
+Usuário criado com sucesso!
+        """)
 
 # criar conta
 def criar_conta(agencia, numero_conta, usuarios):
@@ -57,10 +63,18 @@ def criar_conta(agencia, numero_conta, usuarios):
     usuario = filtrar_usuario(cpf, usuarios)
 
     if usuario:
-        print("Conta criada com sucesso!")
+        limpar_tela()
+        tela_nova_conta()
+        print("""
+ Deposito realizado com sucesso!
+        """)
         return {"agencia": agencia, "numero_conta": numero_conta, "usuario": usuario}
-
-    print("Usuário não encontrado, fluxo de criação de conta encerrado!")
+    limpar_tela()
+    tela_nova_conta()
+    print("""
+ Usuário não encontrado.
+ fluxo de criação de conta encerrado!
+        """)
 
 # listar contas
 def listar_contas(conta):
@@ -71,9 +85,8 @@ def listar_contas(conta):
             Titular:{conta['usuario']['nome']}
         """
         # print(contas)
-        print("=" * 25)
-        print(textwrap.dedent(linha))
-
+        # print("=" * 40)
+        # print(textwrap.dedent(linha))
 
 # Pesquisar usuário
 def filtrar_usuario(cpf, usuarios):
@@ -105,7 +118,7 @@ Deposito realizado com sucesso!
 def sacar():
     global saldo,limite,extrato, numero_saque, LIMITE_SAQUE
 
-    valor = float(input("Informe o valor do saque: "))
+    valor = float(input("Informe o valor do saque:\nR$ "))
     excedeu_saldo = valor > saldo
     excedeu_limite = valor > limite
     excedeu_saque = numero_saque >= LIMITE_SAQUE
@@ -123,7 +136,12 @@ def sacar():
         saldo -= valor
         extrato+= f"Saque: R$ {valor:.2f}\n"
         numero_saque += 1
-
+        input("\nAperte Enter para continuar...")
+        limpar_tela()
+        tela_saque()
+        print("""
+Saque realizado com sucesso!
+        """)
     return saldo, extrato
                                 
 # extrato
@@ -155,6 +173,11 @@ def tela_deposito():
 def tela_saque():
     print("\n ============== SAQUE ================\n")
 
+def tela_nova_conta():
+    print("\n ============= NOVA CONTA =============\n")
+
+def tela_novo_usuario():
+    print("\n ============ NOVO USUÁRIO ============\n")
 
 
 # Funcionalidades do menu
@@ -169,9 +192,9 @@ while True:
         tela_deposito()
         saldo, extrato = depositar(saldo, valor, extrato)     
         voltar = input("""
-=====================================
+ =====================================
                        
-Deseja realizar outra operação? [s/n]\n==> """)
+ Deseja realizar outra operação? [s/n]\n==> """)
         # Verifica se o usuário deseja realizar outra operação
         if voltar == "s":
             limpar_tela()
@@ -185,14 +208,37 @@ Deseja realizar outra operação? [s/n]\n==> """)
     elif opcao == "s":
         tela_saque()
         sacar()
-        limpar_tela()
-    
+        voltar = input("""
+=====================================
+                       
+Deseja realizar outra operação? [s/n]\n==> """)
+        # Verifica se o usuário deseja realizar outra operação
+        if voltar == "s":
+            limpar_tela()
+        elif voltar == "n":
+            opcao = "q"
+            limpar_tela()
+            mensagem_final()
+            break
+   
     # chama o método  exibir_extrado    
     elif  opcao == "e":
         exibir_extrato()
-
-    # chama o método criar conta
+        voltar = input("""
+                       
+Deseja realizar outra operação? [s/n]\n==> """)
+        if voltar == "s":
+            limpar_tela()
+        elif voltar == "n":
+            opcao = "q"
+            limpar_tela()
+            mensagem_final()
+            break
+   
+    # chama o método criar conta ----Inserir a opção VOLTAR ----
     elif opcao == "nc":
+        limpar_tela()
+        tela_nova_conta()
         numero_conta = len(contas) + 1
         conta = criar_conta(AGENCIA, numero_conta, usuarios)
 
@@ -201,10 +247,23 @@ Deseja realizar outra operação? [s/n]\n==> """)
 
     # chama o método que cria um novo usuário
     elif opcao == "nu":
+        tela_novo_usuario()
         criar_usuario(usuarios)
+        voltar = input("""
+=====================================
+                       
+Deseja realizar outra operação? [s/n]\n==> """)
+        # Verifica se o usuário deseja realizar outra operação
+        if voltar == "s":
+            limpar_tela()
+        elif voltar == "n":
+            opcao = "q"
+            limpar_tela()
+            mensagem_final()
+            break
 
     elif opcao == "lc":
-        listar_contas(contas) # ---->  ATENÇÃO <---- buscar a causa do erro
+        listar_contas(contas) 
         
     # comando para encerrar a aplicação 
     elif opcao == "q":
