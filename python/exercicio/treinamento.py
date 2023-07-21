@@ -31,40 +31,40 @@ Menu
 [e] Extrato     [nu] Novo Usuário
 [q] Sair
           
-                              v.02          
+                              v.1.2          
 =======================================   
 """)
           
 # criar usuário
 def criar_usuario(usuarios):
-    cpf = input("Informe o CPF (somente número): ")
+    cpf = input(" Informe o CPF (somente número): ")
     usuario = filtrar_usuario(cpf, usuarios)
     
     if usuario:
         print("""
-Já existe usuário com esse CPF!
+ Já existe usuário com esse CPF!
         """)
         return
 
-    nome = input("Informe o nome completo: ")
-    data_nascimento = input("Informe a data nascimento (dd-mm-aaaa): ")
-    endereco = input("informe o endereço (logradouro, nro - bairro - cidade/sigla estado): ")
+    nome = input(" Informe o nome completo: ")
+    data_nascimento = input(" Informe a data nascimento (dd-mm-aaaa): ")
+    endereco = input(" Informe o endereço (logradouro, nro - bairro - cidade/sigla estado): ")
 
     usuarios.append({"nome": nome, "data_nascimento": data_nascimento, "cpf": cpf, "endereco": endereco})
-    input("\nAperte Enter para continuar...")
+    input("\n Aperte Enter para continuar...")
     limpar_tela()
     tela_novo_usuario()
     print("""
-Usuário criado com sucesso!
+ Usuário criado com sucesso!
         """)
 
 # criar conta
 def criar_conta(agencia, numero_conta, usuarios):
     cpf = input("Informe o CPF do usuário: ")
     usuario = filtrar_usuario(cpf, usuarios)
-
+    input("\nAperte Enter para continuar...")
+    limpar_tela()
     if usuario:
-        limpar_tela()
         tela_nova_conta()
         print("""
  Conta criada com sucesso!
@@ -85,9 +85,6 @@ def listar_contas(conta):
             C/C:{conta['numero_conta']}
             Titular:{conta['usuario']['nome']}
         """
-        tela_lista_contas()
-        # print(contas)
-        # print("=" * 40)
         print(textwrap.dedent(linha))
 
 # Pesquisar usuário
@@ -98,17 +95,17 @@ def filtrar_usuario(cpf, usuarios):
 # depositar
 def depositar(saldo, valor, extrato, /):
     
-    valor = float(input("informe o valor do depósito:\nR$ "))
+    valor = float(input(" Informe o valor do depósito:\n R$ "))
     
     # verifica se foi digitado valores negativos
     if valor > 0:
         saldo += valor
         extrato += f"Depósito: R$ {valor:.2f}\n"
-        input("\nAperte Enter para continuar...")
+        input("\n Aperte Enter para continuar...")
         limpar_tela()
         tela_deposito()
         print("""
-Deposito realizado com sucesso!
+ Deposito realizado com sucesso!
         """)
         
     else:
@@ -120,7 +117,7 @@ Deposito realizado com sucesso!
 def sacar():
     global saldo,limite,extrato, numero_saque, LIMITE_SAQUE
 
-    valor = float(input("Informe o valor do saque:\nR$ "))
+    valor = float(input(" Informe o valor do saque:\n R$ "))
     excedeu_saldo = valor > saldo
     excedeu_limite = valor > limite
     excedeu_saque = numero_saque >= LIMITE_SAQUE
@@ -136,13 +133,13 @@ def sacar():
 #   Verifica se foi digitado valores negativos
     elif valor > 0:
         saldo -= valor
-        extrato+= f"Saque: R$ {valor:.2f}\n"
+        extrato+= f"Saque:    R$ {valor:.2f}\n"
         numero_saque += 1
-        input("\nAperte Enter para continuar...")
+        input("\n Aperte Enter para continuar...")
         limpar_tela()
         tela_saque()
         print("""
-Saque realizado com sucesso!
+ Saque realizado com sucesso!
         """)
     return saldo, extrato
                                 
@@ -150,26 +147,8 @@ Saque realizado com sucesso!
 def exibir_extrato():
     print("\n===============EXTRATO==================")
     print("Não foram realizadas movimentações." if not extrato else extrato)
-    print(f"""\nSaldo:  R$ {saldo:.2f}""")
+    print(f"""\nSaldo:    R$ {saldo:.2f}""")
     print("========================================")
-
-# Voltar 
-def voltar_para_menu():
-    import os
-
-    while True:
-        voltar = input("""
-=====================================
-            
-Deseja realizar outra operação? [s/n]\n==> """)
-# Verifica se o usuário deseja realizar outra operação
-        if voltar == "s":
-            limpar_tela()
-        elif voltar == "n":
-            opcao = "q"
-            limpar_tela()
-            mensagem_final()
-        break
 
         
 # MENSAGEM
@@ -203,11 +182,6 @@ def tela_novo_usuario():
 def tela_lista_contas():
     print("\n =========== LISTA DE CONTAS ==========\n")
 
-# Função Principal
-
-
-
-
 # Funcionalidades do menu
 while True:
 
@@ -219,46 +193,43 @@ while True:
     if opcao == "d":
         tela_deposito()
         saldo, extrato = depositar(saldo, valor, extrato)  
-        voltar_para_menu() 
-        limpar_tela()  
-    #         voltar = input("""
-    #  =====================================
-                    
-    #  Deseja realizar outra operação? [s/n]\n==> """)
-    #         # Verifica se o usuário deseja realizar outra operação
-    #         if voltar == "s":
-    #             limpar_tela()
-    #         elif voltar == "n":
-    #             opcao = "q"
-    #             limpar_tela()
-    #             mensagem_final()
-    #             break
+        voltar = input("""
+ =====================================
+            
+ Deseja realizar outra operação? [s/n]\n ==> """)
+    # Verifica se o usuário deseja realizar outra operação
+        if voltar == "s":
+            limpar_tela()
+
+        elif voltar == "n":
+            opcao = "q"
+            limpar_tela()
+            mensagem_final()
+            break
 
     # chama o método sacar
     elif opcao == "s":
         tela_saque()
         sacar()
-        voltar()
-        limpar_tela()
-    #         voltar = input("""
-    #  =====================================
-                    
-    #  Deseja realizar outra operação? [s/n]\n==> """)
-    #         # Verifica se o usuário deseja realizar outra operação
-    #         if voltar == "s":
-    #             limpar_tela()
-    #         elif voltar == "n":
-    #             opcao = "q"
-    #             limpar_tela()
-    #             mensagem_final()
-    #             break
+        voltar = input("""
+ =====================================
+            
+ Deseja realizar outra operação? [s/n]\n ==> """)
+        # Verifica se o usuário deseja realizar outra operação
+        if voltar == "s":
+            limpar_tela()
+        elif voltar == "n":
+            opcao = "q"
+            limpar_tela()
+            mensagem_final()
+            break
 
     # chama o método  exibir_extrado    
     elif  opcao == "e":
         exibir_extrato()
         voltar = input("""
                     
-    Deseja realizar outra operação? [s/n]\n==> """)
+Deseja realizar outra operação? [s/n]\n==> """)
         if voltar == "s":
             limpar_tela()
 
@@ -277,15 +248,27 @@ while True:
 
         if conta:
             contas.append(conta)
+        voltar = input("""
+ =====================================
+            
+ Deseja realizar outra operação? [s/n]\n ==> """)
+    # Verifica se o usuário deseja realizar outra operação
+        if voltar == "s":
+            limpar_tela()
 
+        elif voltar == "n":
+            opcao = "q"
+            limpar_tela()
+            mensagem_final()
+            break
     # chama o método que cria um novo usuário
     elif opcao == "nu":
         tela_novo_usuario()
         criar_usuario(usuarios)
         voltar = input("""
-    =====================================
-                    
-    Deseja realizar outra operação? [s/n]\n==> """)
+ =====================================
+                
+ Deseja realizar outra operação? [s/n]\n ==> """)
         # Verifica se o usuário deseja realizar outra operação
         if voltar == "s":
             limpar_tela()
@@ -296,8 +279,21 @@ while True:
             break
 
     elif opcao == "lc":
+        tela_lista_contas()
         listar_contas(contas) 
-        
+        voltar = input("""
+ =====================================
+            
+ Deseja realizar outra operação? [s/n]\n ==> """)
+    # Verifica se o usuário deseja realizar outra operação
+        if voltar == "s":
+            limpar_tela()
+
+        elif voltar == "n":
+            opcao = "q"
+            limpar_tela()
+            mensagem_final()
+            break
     # comando para encerrar a aplicação 
     elif opcao == "q":
         mensagem_final()
